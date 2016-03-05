@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="movieApp">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movie App</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <style type="text/css">
+    .container { max-width: 900px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="container">
+      <div class="page-header">
+        <h1><a href="#/">MovieApp</a></h1>
+        <p class="lead">Your Resource for Movie Data.</p>
+      </div>
+      <div ng-controller="SearchController">
+        <form class="form-inline-lg" ng-submit="search()">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Film title..." ng-model="query" 
+            ng-keyup="keyup()" ng-keydown="keydown()">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="search()">Go!</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div ng-view=""></div>
+  </div>
+
+  <hr>
+
+  <div class="footer">
+    <div class="container">
+      <p>from @bradoncode | movie data from http://www.omdbapi.com</p>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://code.angularjs.org/1.4.4/angular.min.js"></script>
+  <script type="text/javascript" src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
+  <!-- <script type="text/javascript" src="https://code.angularjs.org/1.4.4/angular-resource.min.js"></script> -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.3/ui-bootstrap-tpls.min.js"></script>  
+  
+  <script type="text/javascript" src="omdb/service.js"></script>
+  <script type="text/javascript" src="movie-app/app.js"></script>
+  <script type="text/javascript" src="movie-app/search.controller.js"></script>
+  <script type="text/javascript" src="movie-app/results.controller.js"></script>
+  <!-- <script type="text/javascript" src="movie-core/service.js"></script> -->
+
+</body>
+</html>

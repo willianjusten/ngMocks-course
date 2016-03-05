@@ -1,8 +1,8 @@
 angular.module('movieApp')
-    .controller('SearchController', function($location){
-        this.search = function() {
-            if(this.query){
-                $location.path('/results').search('q', this.query);
+    .controller('SearchController', function($scope, $location){
+        $scope.search = function() {
+            if($scope.query){
+                $location.path('/results').search('q', $scope.query);
             }
         }
     });
