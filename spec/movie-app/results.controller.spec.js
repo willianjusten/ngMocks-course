@@ -27,7 +27,7 @@ describe('Results Controller', function() {
     var $location;
     var $q;
     var $rootScope;
-    var $scope
+    var $scope;
     var omdbApi;
 
     beforeEach(module('omdb'));

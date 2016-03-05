@@ -1,14 +1,15 @@
 describe('Search controller', function() {
     var $scope;
     var $location;
-    var $controller;
+    var $timeout;
 
     beforeEach(module('movieApp'));
 
-    beforeEach(inject(function(_$controller_, _$location_){
+    beforeEach(inject(function(_$controller_, _$location_, _$timeout_){
         $scope = {};
         $controller = _$controller_;
         $location = _$location_;
+        $timeout = _$timeout_;
 
         _$controller_('SearchController', { 
             $scope: $scope, 
@@ -26,5 +27,20 @@ describe('Search controller', function() {
         $scope.query = '';
         $scope.search();
         expect($location.url()).toBe('');
+    });
+
+    it('should redirect after 1 second of keyboard inactivity', function() {
+        $scope.query = 'star wars';
+        $scope.keyup();
+        $timeout.flush();
+        expect($timeout.verifyNoPendingTasks).not.toThrow();
+        expect($location.url()).toBe('/results?q=star%20wars');
+    });
+
+    it('should cancel timeout in keydown', function() {
+        $scope.query = 'star wars';
+        $scope.keyup();
+        $scope.search();
+        expect($timeout.verifyNoPendingTasks).not.toThrow();
     });
 });
