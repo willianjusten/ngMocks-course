@@ -1,0 +1,31 @@
+{
+  "name": "ngmocks-course",
+  "version": "1.0.0",
+  "description": "Example code from Pluralsight's ngMocks-course",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/karma start"
+  },
+  "keywords": [
+    "tdd",
+    "karma",
+    "jasmine",
+    "angular",
+    "ngmocks"
+  ],
+  "author": "Willian Justen de Vasconcellos <willianjustenqui@gmail.com> (http://willianjusten.com.br/)",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.21",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-jasmine": "^0.3.7",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-spec-reporter": "0.0.24",
+    "phantomjs-prebuilt": "^2.1.4"
+  },
+  "dependencies": {
+    "angular": "^1.5.0",
+    "angular-mocks": "^1.5.0"
+  }
+}
