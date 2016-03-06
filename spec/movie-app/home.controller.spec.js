@@ -66,10 +66,8 @@ describe('Results Controller', function() {
 
     it('should rotate movies every 5 seconds', function() {
 
-        spyOn(PopularMovies, 'get').and.callFake(function(){
-            var deferred = $q.defer();
-            deferred.resolve(['tt0076759', 'tt0080684', 'tt0086190']);
-            return deferred.promise;
+        spyOn(PopularMovies, 'query').and.callFake(function(cb){
+            cb(['tt0076759', 'tt0080684', 'tt0086190']);
         });
 
         $controller('HomeController', {
@@ -98,10 +96,8 @@ describe('Results Controller', function() {
 
     it('should handle error', function() {
 
-        spyOn(PopularMovies, 'get').and.callFake(function(){
-            var deferred = $q.defer();
-            deferred.resolve(['tt0076759', 'tt0080684', 'tt0086190', 'ttError']);
-            return deferred.promise;
+        spyOn(PopularMovies, 'query').and.callFake(function(cb){
+            cb(['tt0076759', 'tt0080684', 'tt0086190', 'ttError']);
         });
 
         $controller('HomeController', {

@@ -28,6 +28,7 @@ describe('Results Controller', function() {
     var $q;
     var $rootScope;
     var $scope;
+    var $log;
     var omdbApi;
 
     beforeEach(module('omdb'));
@@ -37,12 +38,17 @@ describe('Results Controller', function() {
         $exceptionHandlerProvider.mode('log');
     }))
 
-    beforeEach(inject(function(_$controller_, _$location_, _$q_, _$rootScope_, _$exceptionHandler_, _omdbApi_){
+    beforeEach(module(function($logProvider){
+        $logProvider.debugEnabled(true);
+    }))
+
+    beforeEach(inject(function(_$controller_, _$location_, _$q_, _$rootScope_, _$exceptionHandler_, _$log_, _omdbApi_){
         $controller = _$controller_;
         $location = _$location_;
         $scope = {};
         $q = _$q_;
         $exceptionHandler = _$exceptionHandler_;
+        $log = _$log_;
         $rootScope = _$rootScope_;
         omdbApi = _omdbApi_;
     }));
@@ -61,6 +67,9 @@ describe('Results Controller', function() {
         expect($scope.results[1].Title).toBe(results.Search[1].Title);
         expect($scope.results[2].Title).toBe(results.Search[2].Title);
         expect(omdbApi.search).toHaveBeenCalledWith('star wars');
+
+        expect($log.debug.logs[0]).toEqual(['Controller loaded with query: ', 'star wars']);
+        expect($log.debug.logs[1]).toEqual(['Data returned for query: ', 'star wars', results]);
     });
 
     it('should handle an error', function() {
