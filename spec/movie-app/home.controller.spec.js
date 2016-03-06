@@ -17,23 +17,16 @@ describe('Results Controller', function() {
 
     var $scope;
     var $interval;
+    var $controller;
     var omdbApi;
+    var PopularMovies;
+    var $exceptionHandler;
 
     beforeEach(module('movieApp'));
 
-    beforeEach(inject(function(_$location_, _$interval_, _omdbApi_) {
-        $scope = {};
-        $interval = _$interval_;
-        omdbApi = _omdbApi_;
-    }));
-
-    beforeEach(inject(function(_$q_, _PopularMovies_) {
-        spyOn(_PopularMovies_, 'get').and.callFake(function(){
-            var deferred = _$q_.defer();
-            deferred.resolve(['tt0076759', 'tt0080684', 'tt0086190']);
-            return deferred.promise;
-        });
-    }));
+    beforeEach(module(function($exceptionHandlerProvider) {
+        $exceptionHandlerProvider.mode('log');
+    }))
 
     beforeEach(inject(function(_$q_, _omdbApi_) {
         spyOn(_omdbApi_, 'find').and.callFake(function() {
@@ -49,6 +42,9 @@ describe('Results Controller', function() {
             else if (args === 'tt0086190'){
                 deferred.resolve(results[2]);
             }
+            else if (args === 'ttError'){
+                deferred.reject('error finding movie');
+            }
             else {
                 deferred.reject();
             }
@@ -56,17 +52,34 @@ describe('Results Controller', function() {
         });
     }));
 
-    beforeEach(inject(function(_$controller_, _$rootScope_, _PopularMovies_){
-        _$controller_('HomeController', {
+    beforeEach(inject(function(_$controller_, _$q_, _$interval_, _$exceptionHandler_, _$rootScope_, _omdbApi_, _PopularMovies_) {
+        $scope = {};
+        $controller = _$controller_;
+        $interval = _$interval_;
+        $rootScope = _$rootScope_;
+        $q = _$q_;
+        $exceptionHandler = _$exceptionHandler_;
+        omdbApi = _omdbApi_;
+        PopularMovies = _PopularMovies_;
+    }));
+
+
+    it('should rotate movies every 5 seconds', function() {
+
+        spyOn(PopularMovies, 'get').and.callFake(function(){
+            var deferred = $q.defer();
+            deferred.resolve(['tt0076759', 'tt0080684', 'tt0086190']);
+            return deferred.promise;
+        });
+
+        $controller('HomeController', {
             $scope: $scope,
             $interval: $interval,
             omdbApi: omdbApi,
-            PopularMovies: _PopularMovies_
-        })
-        _$rootScope_.$apply();
-    }));
+            PopularMovies: PopularMovies
+        });
+        $rootScope.$apply();
 
-    it('should rotate movies every 5 seconds', function() {
         // should have a default movie
         expect($scope.result.Title).toBe(results[0].Title);
 
@@ -81,6 +94,39 @@ describe('Results Controller', function() {
         // should return to default
         $interval.flush(5000);
         expect($scope.result.Title).toBe(results[0].Title);
+    });
+
+    it('should handle error', function() {
+
+        spyOn(PopularMovies, 'get').and.callFake(function(){
+            var deferred = $q.defer();
+            deferred.resolve(['tt0076759', 'tt0080684', 'tt0086190', 'ttError']);
+            return deferred.promise;
+        });
+
+        $controller('HomeController', {
+            $scope: $scope,
+            $interval: $interval,
+            omdbApi: omdbApi,
+            PopularMovies: PopularMovies
+        });
+        $rootScope.$apply();
+
+        // should have a default movie
+        expect($scope.result.Title).toBe(results[0].Title);
+
+        // should update after 5 seconds
+        $interval.flush(5000);
+        expect($scope.result.Title).toBe(results[1].Title);
+        
+        // should update after 5 seconds
+        $interval.flush(5000);
+        expect($scope.result.Title).toBe(results[2].Title);
+        
+        // should return to default
+        $interval.flush(5000);
+        
+        expect($exceptionHandler.errors).toEqual(['error finding movie']);
     });
 
 });
