@@ -38,7 +38,7 @@ describe('Results Controller', function() {
     beforeEach(inject(function(_$q_, _omdbApi_) {
         spyOn(_omdbApi_, 'find').and.callFake(function() {
             var deferred = _$q_.defer();
-            var args = _omdbApi_.find.callsx.mostRecent().args[0];
+            var args = _omdbApi_.find.calls.mostRecent().args[0];
 
             if(args === 'tt0076759') {
                 deferred.resolve(results[0]);

@@ -6,10 +6,11 @@
   </ol>
 
   <accordion>
-    <accordion-group ng-repeat="result in results" is-open="result.open">
+    <accordion-group ng-repeat="result in results" is-open="result.open" ng-click="expand($index, result.imdbID)">
       <accordion-heading>
         {{result.Title}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': result.open, 'glyphicon-chevron-right': !result.open}"></i>
       </accordion-heading>
+      <movie-result result="result.data"></movie-result>
     </accordion-group>
   </accordion>
 
