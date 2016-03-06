@@ -1,12 +1,12 @@
 angular.module('movieApp')
-    .controller('ResultsController', function($scope, $location, omdbApi){
+    .controller('ResultsController', function($scope, $location, $exceptionHandler, omdbApi){
         var query = $location.search().q;
         omdbApi.search(query)
             .then(function(data){ 
                 $scope.results = data.Search;
             })
-            .catch(function(){
-                $scope.errorMessage = 'Something went wrong!';
+            .catch(function(e){
+                $exceptionHandler(e); 
             })
 
         $scope.expand = function expand(index, id) {
